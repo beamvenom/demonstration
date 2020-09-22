@@ -49,8 +49,7 @@ def loadSchedule(fileDestination):
 
 def getBusyTimes(busyDic, startDate, endDate):
     count = 0;
-    #personNbr = input(f'-------Ange anställningsnummer (Person {count + 1})(Blankt svar för att fortsätta)-------\n')
-    personNbr = "57646786307395936680161735716561753784"
+    personNbr = input(f'-------Ange anställningsnummer (Person {count + 1})(Blankt svar för att fortsätta)-------\n')
     busyTimes = [];
     while personNbr != "" or count < 1:
         if personNbr in busyDic:
@@ -65,30 +64,30 @@ def getBusyTimes(busyDic, startDate, endDate):
         personNbr = input(f'-------Ange anställningsnummer (Person {count + 1})(Blankt svar för att fortsätta)-------\n')
     return busyTimes
 
-def findTime(busyDic, officeStart, officeEnd, startDate, endDate, duration):
-    busyTimes = getBusyTimes(busyDic, startDate, endDate)
+def correctDates(officeStart,officeEnd, startDate,endDate):
     if startDate.hour < officeStart.hour:
         startDate = startDate.replace(hour=officeStart.hour, minute=officeStart.minute)
     if endDate.hour >= officeEnd.hour:
         endDate = endDate.replace(hour=officeEnd.hour, minute=officeEnd.minute)
+    return startDate, endDate
+
+def findTime(busyTimes, officeStart, officeEnd, startDate, endDate, duration):
     testTime = startDate;
     found = False;
     while found == False:
         found = True;
         for busyTime in busyTimes:
-            if timeInRange(busyTime[0], busyTime[1], testTime) or timeInRange(busyTime[0], busyTime[1],testTime + timedelta(minutes=duration)):
-                print("hej")
-                testTime = testTime.replace(hour=busyTime[1].hour, minute=busyTime[1].minute) + timedelta(minutes=30);
+            if timeInRange(busyTime[0], busyTime[1], testTime) or timeInRange(busyTime[0], busyTime[1],
+                                                                              testTime + timedelta(minutes=duration)):
+                testTime = testTime.replace(hour=busyTime[1].hour, minute=busyTime[1].minute) + timedelta(minutes=30)
                 if testTime >= datetime(testTime.year, testTime.month, testTime.day, officeEnd.hour, officeEnd.minute):
-                    testTime += timedelta(days=1);
-                    testTime = testTime.replace(hour=officeStart.hour, minute=officeStart.minute);
-                    found = False;
-                    break;
+                    testTime += timedelta(days=1)
+                    testTime = testTime.replace(hour=officeStart.hour, minute=officeStart.minute)
+                    found = False
+                    break
     if testTime >= endDate:
         return "No Time Found"
     return f"-------Found Time is: {testTime} to {testTime + timedelta(minutes=duration)}-------"
-
-def cleanValues():
 
 if __name__ == '__main__':
     busyDic = loadSchedule("freebusy.txt")
@@ -97,4 +96,6 @@ if __name__ == '__main__':
     startDate = inputDate("Tidigaste mötesdatum")
     endDate = inputDate("Senaste mötesdatum")
     duration = intPrompt("-------Hur många minuter varar mötet?-------")
-    print(findTime(busyDic, officeStart, officeEnd, startDate, endDate, duration))
+    busyTimes = getBusyTimes(busyDic, startDate, endDate)
+    startDate, endDate = correctDates(officeStart, officeEnd, startDate, endDate)
+    print(findTime(busyTimes, officeStart, officeEnd, startDate, endDate, duration))
