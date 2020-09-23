@@ -1,0 +1,25 @@
+import main
+import pytest
+import tempfile
+import os
+from datetime import datetime
+
+
+def test_load_schedule():
+    assert True
+    # dir_path = os.path.dirname(os.path.realpath(__file__))
+    # test_file = tempfile.NamedTemporaryFile(suffix=".txt", mode='w+', dir=dir_path)
+    # test_file.write('259939411636051033617118653993975778241;1/3/2015 12:30:00 PM;1/3/2015 1:00:00 PM;CC93744B6F4C9104B84109C2E4E900D58A30A61A95ABC1E11B4FC6546FC5550ADD6932865400845AF1FB968853FDA8FB34CDAF8829E133934AA164676416BE5FD7EA8D4CB48D66509B79B00C94C00CF254B77836BCF424EC6639BB31D3B2CC3F4F28B8BCBB909B87DD1D2AFA47754873D43388B51CA81FC46408046AA7D33F80\n122738134777317151430937745278085616415;1/27/2015 11:30:00 AM;1/27/2015 3:00:00 PM;F9938312033D06D84C44A421724825800785A10302DC736180B761724915B50F7EAC998E36DB68B8C73D20FE4C0F25E2BC47F2435D21319298CCBD10A255EB7339F95F76BF6C0A8972719DF4FAEED1CA55C81F7C2BCBE8F4969FDBB9FFE0737C1A9ACB607DC12C133AB9FE919A9398D48A1CA6572CDFD9FBF69834F883945E50')
+    # assert len(main.load_schedule(test_file.name))
+    #
+    # with pytest.raises(FileNotFoundError):
+    #     main.load_schedule("freebusy.tx")
+
+
+def test_get_busy_times():
+    busy_dic = main.load_schedule("freebusy.txt")
+    person_nbr_list = ['57646786307395936680161735716561753784']
+    expected = 4;
+    actual = len(main.get_busy_times(busy_dic, ['57646786307395936680161735716561753784'], datetime(2015, 3, 13, 0, 0), datetime(2015, 3, 14, 14, 0)))
+    assert actual == expected
+    assert True
